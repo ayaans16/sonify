@@ -1,0 +1,70 @@
+# sonify soundscape. Edit freely; no code changes needed.
+# Flow: signal value -> rules below -> sound id -> engine.
+version: 1
+master_volume: 0.7
+polyphony: 16
+max_events_per_s: 8
+
+# Quiet sounds get ducked when they fire often so rare ones stand out.
+ducking:
+  enabled: true
+  window_s: 5
+  max_reduction_db: 9
+  full_duck_rate: 2
+
+# Logical sound id -> Minecraft sound event (resolved by `sonify setup`).
+sounds:
+  ambient_cave:  { key: ambient.cave,            kind: loop,    volume: 0.35 }
+  ambient_water: { key: ambient.underwater.loop, kind: loop,    volume: 0.25 }
+  note_harp:     { key: block.note_block.harp,   kind: pitched, volume: 0.5, cooldown_s: 0.1 }
+  creeper_hiss:  { key: entity.creeper.primed,   kind: oneshot, volume: 0.8, cooldown_s: 1 }
+  mem_warning:   { key: block.note_block.bell,   kind: oneshot, volume: 0.6, cooldown_s: 1 }
+  disk_warning:  { key: block.anvil.land,        kind: oneshot, volume: 0.5, cooldown_s: 1 }
+
+# Pitched sounds are always quantized to this scale.
+pitched:
+  scale: pentatonic_minor
+  root: D3
+  range_octaves: 2
+
+signals:
+  cpu_percent:
+    source: psutil.cpu
+    # Continuous bed: cave ambience gets louder as load climbs.
+    ambient:
+      sound: ambient_cave
+      gain: { min_value: 0, max_value: 100, min: 0.1, max: 1.0 }
+    events:
+      # Note blocks only start above 25% so an idle machine stays quiet.
+      - sound: note_harp
+        mode: pitch_tempo
+        when: { above: 25, hysteresis: 5 }
+        pitch: { from: 25, to: 100 }
+        interval_s: { from: 2.0, to: 0.25 }
+        volume: 0.8
+
+  memory_percent:
+    source: psutil.memory
+    events:
+      # Repeats every cooldown_s while memory stays above 85%.
+      - sound: mem_warning
+        when: { above: 85, hysteresis: 5 }
+        cooldown_s: 30
+
+  disk_percent:
+    source: psutil.disk
+    events:
+      - sound: disk_warning
+        when: { above: 90, hysteresis: 2 }
+        cooldown_s: 120
+
+  net_errors:
+    source: psutil.net_errors   # errors + drops per second
+    events:
+      - sound: creeper_hiss
+        when: { above: 1, hysteresis: 0 }
+        cooldown_s: 20
+
+# Always-on bed, independent of any signal.
+ambient_baseline:
+  - { sound: ambient_water, gain: 0.6 }
