@@ -4,9 +4,21 @@ build-backend = "hatchling.build"
 
 [project]
 name = "minecraft-sonify"
-version = "0.1.0"
+version = "0.1.1"
 description = "Turn system metrics into ambient Minecraft sound effects."
 readme = "README.md"
+license = { text = "MIT" }
+license-files = ["LICENSE"]
+authors = [{ name = "Ayaan Shaikh" }]
+keywords = ["minecraft", "sonification", "monitoring", "ambient", "psutil"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Operating System :: MacOS",
+    "Programming Language :: Python :: 3",
+    "Topic :: System :: Monitoring",
+    "Topic :: Multimedia :: Sound/Audio",
+]
 requires-python = ">=3.9"
 dependencies = [
     "click>=8.1",
