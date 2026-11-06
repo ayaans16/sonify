@@ -222,7 +222,7 @@ class DashboardServer:
         self.port = port
         self.url = f"http://localhost:{port}"
         self._server = uvicorn.Server(
-            uvicorn.Config(app, host=HOST, port=port, log_level="warning", ws="websockets")
+            uvicorn.Config(app, host=HOST, port=port, log_level="warning", ws="auto")
         )
         self._thread = threading.Thread(target=self._server.run, name="dashboard", daemon=True)
 
