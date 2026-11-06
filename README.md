@@ -80,8 +80,8 @@ mapping editor that validates and saves `config.yaml` (atomically) and hot-reloa
 it. It binds to `127.0.0.1` only, rejects other `Host`/`Origin` headers, loads
 nothing from the network and sends no telemetry.
 
-The frontend is plain HTML and ES modules with no build step. For the pixel font,
-see `src/sonify/ui/static/fonts/README.md` (without it, a system monospace is used).
+The frontend is plain HTML and ES modules with no build step. The Silkscreen pixel font
+is served locally from `src/sonify/ui/static/fonts/`.
 
 The UI only subscribes to the daemon's event bus (`metric`, `sound`, `state`,
 `config` events over `/ws`) and calls the engine's public methods; it duplicates
