@@ -80,7 +80,7 @@ mapping editor that validates and saves `config.yaml` (atomically) and hot-reloa
 it. It binds to `127.0.0.1` only, rejects other `Host`/`Origin` headers, loads
 nothing from the network and sends no telemetry.
 
-The frontend is plain HTML and ES modules with no build step. The Silkscreen pixel font
+The frontend is plain HTML and ES modules with no build step. The Minecraftia pixel font (Silkscreen as fallback)
 is served locally from `src/sonify/ui/static/fonts/`.
 
 The UI only subscribes to the daemon's event bus (`metric`, `sound`, `state`,

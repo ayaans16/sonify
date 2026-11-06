@@ -1,4 +1,9 @@
 @font-face {
+  font-family: "Minecraftia";
+  src: local("Minecraftia"), url("/static/fonts/Minecraftia-Regular.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
   font-family: "Silkscreen";
   src: local("Silkscreen"), local("Silkscreen Regular"),
        url("/static/fonts/Silkscreen-Regular.ttf") format("truetype");
@@ -18,7 +23,7 @@
   --dirt: #6b4a2b;
   --gold: #f2c14e;
   --redstone: #ff5a4f;
-  --pixel: "Silkscreen", ui-monospace, "SF Mono", Menlo, monospace;
+  --pixel: "Minecraftia", "Silkscreen", ui-monospace, "SF Mono", Menlo, monospace;
   --body: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --bevel-in: #0c0c0e #5c5c64 #5c5c64 #0c0c0e;
   --bevel-out: #6a6a72 #131315 #131315 #6a6a72;
@@ -35,10 +40,10 @@ body {
   color: var(--text);
   font: 14px/1.5 var(--body);
 }
-h1, h2, h3, label, button, .unit { font-family: var(--pixel); letter-spacing: 0.04em; }
-h1 { margin: 0; font-size: 1.4rem; color: var(--grass); }
-h2 { font-size: 0.95rem; margin: 0 0 0.75rem; text-transform: uppercase; color: var(--gold); }
-h3 { font-size: 0.8rem; margin: 0; font-weight: normal; text-transform: uppercase; }
+h1, h2, h3, label, button, .unit { font-family: var(--pixel); }
+h1 { margin: 0; font-size: 24px; font-weight: normal; color: var(--grass); }
+h2 { font-size: 12px; font-weight: normal; margin: 0 0 0.75rem; text-transform: uppercase; color: var(--gold); }
+h3 { font-size: 12px; margin: 0; font-weight: normal; text-transform: uppercase; }
 
 .skip { position: absolute; left: -999px; }
 .skip:focus { left: 1rem; top: 1rem; background: var(--gold); color: #000; padding: 0.5rem; z-index: 10; }
@@ -52,7 +57,7 @@ h3 { font-size: 0.8rem; margin: 0; font-weight: normal; text-transform: uppercas
   padding: 1.25rem 1rem 0.9rem; margin-top: 14px;
   background: var(--stone-800); border-bottom: 4px solid #0c0c0e;
 }
-.conn { display: flex; align-items: center; gap: 0.5rem; font-family: var(--pixel); font-size: 0.75rem; }
+.conn { display: flex; align-items: center; gap: 0.5rem; font-family: var(--pixel); font-size: 12px; }
 .dot { width: 12px; height: 12px; background: var(--stone-400); border: 2px solid #000; }
 .conn[data-state="open"] .dot { background: var(--grass); }
 .conn[data-state="closed"] .dot { background: var(--redstone); }
@@ -67,7 +72,7 @@ main { padding: 1rem; display: grid; gap: 1rem; max-width: 80rem; margin: 0 auto
 
 /* controls */
 button {
-  background: var(--stone-600); color: var(--text); font-size: 0.7rem; text-transform: uppercase;
+  background: var(--stone-600); color: var(--text); font-size: 12px; text-transform: uppercase;
   border: 3px solid; border-color: var(--bevel-out); padding: 0.35rem 0.7rem; cursor: pointer;
 }
 button:hover { background: var(--stone-400); color: #000; }
@@ -82,7 +87,7 @@ input, select {
 input[type="number"], input[type="text"] { width: 7.5em; }
 input[type="range"] { accent-color: var(--grass); padding: 0; }
 input[aria-invalid="true"], select[aria-invalid="true"] { border-color: var(--redstone); }
-label { font-size: 0.7rem; text-transform: uppercase; }
+label { font-size: 12px; text-transform: uppercase; }
 label.check { display: inline-flex; gap: 0.4rem; align-items: center; }
 
 /* signal tiles: inventory slots */
@@ -91,10 +96,10 @@ label.check { display: inline-flex; gap: 0.4rem; align-items: center; }
   background: var(--stone-900); border: 4px solid; border-color: var(--bevel-in);
   padding: 0.7rem; display: grid; gap: 0.25rem; min-width: 0;
 }
-.slot .value { font-family: var(--pixel); font-size: 1.7rem; line-height: 1.1; color: var(--grass); }
+.slot .value { font-family: var(--pixel); font-size: 24px; line-height: 1.1; color: var(--grass); }
 .slot[data-level="warn"] .value { color: var(--gold); }
 .slot[data-level="hot"] .value { color: var(--redstone); }
-.slot .unit { font-size: 0.8rem; color: var(--muted); margin-left: 0.2em; }
+.slot .unit { font-size: 12px; color: var(--muted); margin-left: 0.2em; }
 .slot .mapped { color: var(--muted); font-size: 0.75rem; overflow-wrap: anywhere; min-height: 1.5em; }
 .slot svg { width: 100%; height: 36px; display: block; background: #0c0c0e; }
 .slot polyline { fill: none; stroke: var(--grass); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
@@ -115,14 +120,14 @@ label.check { display: inline-flex; gap: 0.4rem; align-items: center; }
 .timeline .snd { color: var(--grass); }
 .timeline .sup { color: var(--stone-400); font-style: italic; }
 .timeline li.suppressed .snd { color: var(--stone-400); }
-.empty { color: var(--muted); padding: 0.75rem; }
+.timeline li.empty { display: block; color: var(--muted); padding: 0.75rem; }
 
 /* mixer */
 .mixer { display: grid; gap: 0.5rem; }
 .mix-row { display: grid; grid-template-columns: 1fr; gap: 0.35rem 0.75rem; align-items: center; background: var(--stone-900); border: 3px solid; border-color: var(--bevel-in); padding: 0.5rem 0.6rem; }
 @media (min-width: 40rem) { .mix-row { grid-template-columns: 8em 1fr 1fr auto; } }
 .mix-row.playing { border-left-color: var(--grass); }
-.mix-row .name { font-family: var(--pixel); font-size: 0.75rem; overflow-wrap: anywhere; }
+.mix-row .name { font-family: var(--pixel); font-size: 12px; overflow-wrap: anywhere; }
 .mix-row .ctl { display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; }
 .mix-row .ctl input[type="range"] { flex: 1; min-width: 0; }
 .mix-row .btns { display: flex; gap: 0.3rem; }
@@ -130,7 +135,7 @@ label.check { display: inline-flex; gap: 0.4rem; align-items: center; }
 /* editor */
 #editor { display: grid; gap: 1rem; }
 fieldset { border: 3px solid; border-color: var(--bevel-in); margin: 0; padding: 0.75rem; min-width: 0; }
-legend { font-family: var(--pixel); font-size: 0.8rem; color: var(--grass); padding: 0 0.4rem; }
+legend { font-family: var(--pixel); font-size: 12px; color: var(--grass); padding: 0 0.4rem; }
 .rule { margin-top: 0.75rem; border-color: var(--stone-600); }
 .fields { display: flex; flex-wrap: wrap; gap: 0.6rem 1rem; align-items: flex-start; }
 .field { display: grid; gap: 0.2rem; }
