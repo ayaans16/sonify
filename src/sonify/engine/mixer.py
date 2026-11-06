@@ -166,10 +166,14 @@ class Engine:
 
     # ------------------------------------------------------------- play
 
-    def play(self, event: SoundEvent) -> Optional[str]:
-        """Play ``event`` if allowed. Returns the suppression reason, or None."""
+    def play(self, event: SoundEvent, force: bool = False) -> Optional[str]:
+        """Play ``event`` if allowed. Returns the suppression reason, or None.
+
+        ``force`` skips the cooldown and rate limit (used for previews); mute
+        and solo still apply.
+        """
         with self._lock:
-            reason = self._try_play(event)
+            reason = self._try_play(event, force)
         if self._bus is not None:
             self._bus.publish(
                 "sound",
@@ -186,7 +190,7 @@ class Engine:
         self._publish_state()
         return reason
 
-    def _try_play(self, event: SoundEvent) -> Optional[str]:
+    def _try_play(self, event: SoundEvent, force: bool = False) -> Optional[str]:
         sound_def = self._config.sounds.get(event.sound)
         if sound_def is None:
             return "unknown_sound"
@@ -198,12 +202,13 @@ class Engine:
             return "solo"
 
         now = self._clock()
-        if now - self._last_played.get(event.sound, -1e9) < self._cooldowns[event.sound]:
-            return "cooldown"
         while self._recent and now - self._recent[0] > 1.0:
             self._recent.popleft()
-        if len(self._recent) >= self._max_rate:
-            return "rate_limit"
+        if not force:
+            if now - self._last_played.get(event.sound, -1e9) < self._cooldowns[event.sound]:
+                return "cooldown"
+            if len(self._recent) >= self._max_rate:
+                return "rate_limit"
 
         try:
             handle = self._handle_for(event.sound, event.pitch)
