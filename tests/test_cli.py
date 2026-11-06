@@ -63,3 +63,29 @@ def test_setup_end_to_end_with_fake_install(tmp_path: Path, fake_minecraft: Path
 def test_test_command_rejects_unknown_sound(tmp_path: Path) -> None:
     result = CliRunner().invoke(main, ["test", "nope", "--config", str(write_config(tmp_path))])
     assert result.exit_code == 1 and "Defined sounds: hiss" in result.output
+
+
+def test_missing_mixer_gives_actionable_error(tmp_path: Path, monkeypatch) -> None:
+    import sys
+    import types
+
+    # Simulate pygame built without a mixer (e.g. plain `pygame` on a new Python).
+    class NoMixer(types.ModuleType):
+        error = Exception
+
+        def __getattr__(self, name: str):
+            raise NotImplementedError("mixer module not available")
+
+    monkeypatch.setitem(sys.modules, "pygame", NoMixer("pygame"))
+    sounds = tmp_path / "sounds" / "hiss"
+    sounds.mkdir(parents=True)
+    import numpy as np
+    import soundfile as sf
+
+    tone = np.zeros(100, dtype=np.float32)
+    sf.write(str(sounds / "1.wav"), np.stack([tone, tone], axis=1), 44100)
+    result = CliRunner().invoke(
+        main, ["run", "--config", str(write_config(tmp_path)), "--sounds-dir", str(tmp_path / "sounds")]
+    )
+    assert result.exit_code == 1
+    assert "pip install pygame-ce" in result.output

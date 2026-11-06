@@ -7,6 +7,10 @@ from typing import Any, Optional, Protocol
 import numpy as np
 
 
+class AudioUnavailableError(Exception):
+    """pygame's mixer could not start; the message says how to fix it."""
+
+
 class Backend(Protocol):
     def load(self, samples: np.ndarray) -> Any: ...
     def play(self, sound: Any, volume: float, pan: float) -> Optional[Any]: ...
@@ -28,12 +32,22 @@ class PygameBackend:
     """44.1 kHz stereo 16-bit output through pygame.mixer."""
 
     def __init__(self, channels: int = 32) -> None:
-        import pygame
+        try:
+            import pygame
 
+            pygame.mixer.pre_init(44100, -16, 2, 512)
+            pygame.mixer.init()
+            pygame.mixer.set_num_channels(channels)
+        except (ImportError, NotImplementedError) as exc:
+            raise AudioUnavailableError(
+                "pygame has no audio mixer in this environment. This usually means "
+                "the plain `pygame` package was installed on a Python version it has no "
+                f"wheels for ({exc}).\n"
+                "Fix: pip uninstall -y pygame && pip install pygame-ce"
+            ) from exc
+        except pygame.error as exc:
+            raise AudioUnavailableError(f"Could not open an audio device: {exc}") from exc
         self._pg = pygame
-        pygame.mixer.pre_init(44100, -16, 2, 512)
-        pygame.mixer.init()
-        pygame.mixer.set_num_channels(channels)
 
     def load(self, samples: np.ndarray) -> Any:
         return self._pg.mixer.Sound(buffer=np.ascontiguousarray(samples).tobytes())

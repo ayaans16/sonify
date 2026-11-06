@@ -11,7 +11,7 @@ it only reads sound files from your own Minecraft install.
 
 ## Setup
 
-Requires Python 3.9+ and Minecraft Java Edition launched at least once (so the
+Requires Python 3.9+ (uses `pygame-ce`, which has wheels for current Pythons, including 3.14) and Minecraft Java Edition launched at least once (so the
 launcher has downloaded its assets).
 
 ```bash
