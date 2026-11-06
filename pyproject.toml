@@ -21,7 +21,6 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-menubar = ["rumps>=0.4"]
 dev = ["pytest>=8", "httpx>=0.27"]
 
 [project.scripts]

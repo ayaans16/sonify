@@ -157,6 +157,10 @@ class Engine:
             raise KeyError(sound)
 
     @property
+    def bank(self) -> SoundBank:
+        return self._bank
+
+    @property
     def muted(self) -> bool:
         return self._muted
 
