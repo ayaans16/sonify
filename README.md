@@ -1,6 +1,6 @@
 # sonify
 
-Hear the health of your computer. 🎧
+Hear the health of your computer.
 
 `sonify` turns system metrics (CPU, memory, disk, network errors) into ambient Minecraft sounds. A calm machine sounds like a quiet cave. When something goes wrong, you *hear* it, no dashboard-staring required.
 
@@ -109,10 +109,10 @@ Handy flags for `sonify run`:
 ## What does it sound like?
 | Signal | Sound |
 | --- | --- |
-| `cpu_percent` | 🎹 Note-block harp. The pitch climbs and the tempo speeds up with load, but only above 25%, so an idle machine stays silent. The cave ambience gets louder too. |
-| `memory_percent` | 🔔 A bell above 85%, repeating every 30 seconds while it stays high |
-| `disk_percent` | 🔨 An anvil above 90% |
-| `net_errors` | 💥 A creeper hiss when errors and drops go above 1 per second |
+| `cpu_percent` | Note-block harp. The pitch climbs and the tempo speeds up with load, but only above 25%, so an idle machine stays silent. The cave ambience gets louder too. |
+| `memory_percent` | A bell above 85%, repeating every 30 seconds while it stays high |
+| `disk_percent` | An anvil above 90% |
+| `net_errors` | A creeper hiss when errors and drops go above 1 per second |
 
 Harp notes are always snapped to a pentatonic scale, so even a stressed machine sounds musical instead of random.
 
@@ -157,10 +157,10 @@ sonify run --ui
 ```
 Then open [http://localhost:8765](http://localhost:8765).
 
-- 📈 **Live tiles** for each signal, with sparklines
-- 🕒 **Timeline** of every sound that played (or was skipped, and why), with filters
-- 🎚️ **Mixer** with master and per-sound volume, mute, solo and live cooldowns
-- ✏️ **Mapping editor** that validates, saves `config.yaml` and hot-reloads it
+- **Live tiles** for each signal, with sparklines
+- **Timeline** of every sound that played (or was skipped, and why), with filters
+- **Mixer** with master and per-sound volume, mute, solo and live cooldowns
+- **Mapping editor** that validates, saves `config.yaml` and hot-reloads it
 
 > [!WARNING]
 > If port `8765` is already taken, sonify will tell you. Pick another with `--port 9000`.
