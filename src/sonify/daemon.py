@@ -44,7 +44,7 @@ class Daemon:
         self.engine.apply_config(config)
         self._dispatch(self.mapper.baseline())
         self.revision += 1
-        self.bus.publish("config", {"revision": self.revision})
+        self.bus.publish("config", {"revision": self.revision, "mappings": self.mapper.describe()})
 
     def run(self) -> None:
         """Run until ``stop()`` is called. Blocks the calling thread."""

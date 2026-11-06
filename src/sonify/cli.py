@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import socket
 import time
 from pathlib import Path
 from typing import Optional
@@ -79,7 +80,9 @@ def setup(config_path: Path, sounds_dir: Path, minecraft_dir: Optional[Path], in
 @sounds_option
 @click.option("--volume", type=click.FloatRange(0, 1), help="Master volume 0-1 (overrides the config).")
 @click.option("--mute", is_flag=True, help="Start muted.")
-def run(config_path: Path, sounds_dir: Path, volume: Optional[float], mute: bool) -> None:
+@click.option("--ui", is_flag=True, help="Serve the dashboard on 127.0.0.1.")
+@click.option("--port", type=click.IntRange(1, 65535), default=8765, show_default=True, help="Dashboard port (with --ui).")
+def run(config_path: Path, sounds_dir: Path, volume: Optional[float], mute: bool, ui: bool, port: int) -> None:
     """Start the daemon."""
     config = _load(config_path)
     bank = SoundBank(sounds_dir)
@@ -89,6 +92,8 @@ def run(config_path: Path, sounds_dir: Path, volume: Optional[float], mute: bool
         raise click.ClickException(str(exc))
     for name in unknown_signals(config):
         click.echo(f"warning: signal '{name}' has no source and will never fire", err=True)
+    if ui:
+        _require_free_port(port)
 
     bus = EventBus()
     engine = Engine(config, bank, PygameBackend(), bus)
@@ -96,12 +101,31 @@ def run(config_path: Path, sounds_dir: Path, volume: Optional[float], mute: bool
         engine.set_master_volume(volume)
     engine.set_muted(mute)
     daemon = Daemon(config, engine, Mapper(config, bus), bus)
+    dashboard = None
+    if ui:
+        from .ui.server import DashboardServer, create_app
+
+        dashboard = DashboardServer(create_app(daemon, config_path, port), port)
+        dashboard.start()
+        click.echo(f"Dashboard: {dashboard.url}")
     click.echo("sonify running. Ctrl-C to stop." + (" (muted)" if mute else ""))
     try:
         daemon.run()
     except KeyboardInterrupt:
         daemon.stop()
         click.echo("\nbye")
+    finally:
+        if dashboard is not None:
+            dashboard.stop()
+
+
+def _require_free_port(port: int) -> None:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
+        probe.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        try:
+            probe.bind(("127.0.0.1", port))
+        except OSError as exc:
+            raise click.ClickException(f"Cannot use port {port} for the dashboard: {exc}. Try --port.")
 
 
 @main.command()
