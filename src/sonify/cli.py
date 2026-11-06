@@ -18,7 +18,7 @@ from .bus import EventBus
 from .config import Config, ConfigFileError, load_config
 from .daemon import Daemon
 from .engine import Engine, MissingAssetsError, SoundBank
-from .engine.backend import PygameBackend
+from .engine.backend import AudioUnavailableError, PygameBackend
 from .mapper import Mapper, referenced_sounds, root_pitch
 from .models import AmbientUpdate, SoundEvent
 from .sources import unknown_signals
@@ -31,6 +31,13 @@ sounds_option = click.option(
     "--sounds-dir", type=click.Path(path_type=Path), default="sounds",
     show_default=True, help="Folder written by `sonify setup`.",
 )
+
+
+def _backend() -> PygameBackend:
+    try:
+        return PygameBackend()
+    except AudioUnavailableError as exc:
+        raise click.ClickException(str(exc))
 
 
 def _load(config_path: Path) -> Config:
@@ -96,7 +103,7 @@ def run(config_path: Path, sounds_dir: Path, volume: Optional[float], mute: bool
         _require_free_port(port)
 
     bus = EventBus()
-    engine = Engine(config, bank, PygameBackend(), bus)
+    engine = Engine(config, bank, _backend(), bus)
     if volume is not None:
         engine.set_master_volume(volume)
     engine.set_muted(mute)
@@ -147,7 +154,7 @@ def test(sound: str, config_path: Path, sounds_dir: Path, pitch: Optional[int], 
     except MissingAssetsError as exc:
         raise click.ClickException(str(exc))
 
-    engine = Engine(config, bank, PygameBackend())
+    engine = Engine(config, bank, _backend())
     if volume is not None:
         engine.set_master_volume(volume)
     kind = config.sounds[sound].kind
