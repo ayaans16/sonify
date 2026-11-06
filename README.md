@@ -8,7 +8,6 @@ It runs standalone on macOS. No Minecraft client or server needs to be running;
 it only reads sound files from your own Minecraft install.
 
 ![dashboard screenshot placeholder](docs/dashboard.png)
-<!-- TODO: add a screenshot or GIF at docs/dashboard.png -->
 
 ## Setup
 
