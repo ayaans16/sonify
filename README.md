@@ -59,8 +59,10 @@ Or from PyPI:
 ```bash
 pip install minecraft-sonify
 ```
-> [!WARNING]
-> The PyPI package does not include a `config.yaml`. Copy the one from this repo and pass it with `--config config.yaml`.
+Then create your starter config:
+```bash
+sonify init
+```
 
 The command is called `sonify` either way.
 
@@ -88,6 +90,7 @@ Press `Ctrl-C` to stop.
 
 | Command | What it does |
 | --- | --- |
+| `sonify init` | Write a starter `config.yaml` you can edit |
 | `sonify setup` | Extract and prepare sounds from your Minecraft install |
 | `sonify run` | Start listening to your machine |
 | `sonify test <sound>` | Play one sound so you know it works (`--pitch N` for pitched sounds) |
@@ -201,7 +204,7 @@ Audio is mocked in the tests, so you don't need speakers or a Minecraft install.
 > - [x] Local web dashboard with mixer and mapping editor
 > - [ ] `mapper/scale.py::quantize_to_scale`: until it lands, pitched notes stay on the root note and a warning is logged
 > - [ ] `config.py::validate_mapping`: cross-field rules for the mapping editor (only structural checks run today)
-> - [ ] A `sonify init` command that writes a starter `config.yaml`
+> - [x] `sonify init` writes a starter `config.yaml`
 > - [ ] Docker events and log-tail sources
 > - [ ] Per-host stereo panning
 > - [ ] Menu bar app
