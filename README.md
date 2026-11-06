@@ -16,7 +16,7 @@ launcher has downloaded its assets).
 
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
-pip install -e .
+pip install -e .   # or, once published: pip install minecraft-sonify
 sonify setup        # extract and convert the sounds named in config.yaml
 sonify run          # start the daemon
 ```
