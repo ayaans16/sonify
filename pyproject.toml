@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "minecraft-sonify"
-version = "0.1.1"
+version = "0.1.2"
 description = "Turn system metrics into ambient Minecraft sound effects."
 readme = "README.md"
 license = { text = "MIT" }
