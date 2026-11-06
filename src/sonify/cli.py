@@ -1,10 +1,11 @@
-"""Command line interface: setup, run, test, list."""
+"""Command line interface: init, setup, run, test, list."""
 
 from __future__ import annotations
 
 import logging
 import socket
 import time
+from importlib import resources
 from pathlib import Path
 from typing import Optional
 
@@ -56,6 +57,18 @@ def main(verbose: bool) -> None:
         level=logging.INFO if verbose else logging.WARNING,
         format="%(levelname)s %(name)s: %(message)s",
     )
+
+
+@main.command()
+@config_option
+@click.option("--force", is_flag=True, help="Overwrite an existing config file.")
+def init(config_path: Path, force: bool) -> None:
+    """Write a starter config.yaml you can edit."""
+    if config_path.exists() and not force:
+        raise click.ClickException(f"{config_path} already exists. Use --force to overwrite it.")
+    text = resources.files("sonify").joinpath("default_config.yaml").read_text()
+    config_path.write_text(text)
+    click.echo(f"Wrote {config_path}. Next: sonify setup")
 
 
 @main.command()

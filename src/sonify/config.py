@@ -167,7 +167,7 @@ def load_config(path: Path) -> Config:
     if not path.is_file():
         raise ConfigFileError(
             f"Config file not found: {path}\n"
-            "Pass --config <file>, or run from the directory that holds config.yaml."
+            "Run `sonify init` to create one, or pass --config <file>."
         )
     try:
         raw = yaml.safe_load(path.read_text())

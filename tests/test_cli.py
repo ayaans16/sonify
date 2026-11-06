@@ -89,3 +89,24 @@ def test_missing_mixer_gives_actionable_error(tmp_path: Path, monkeypatch) -> No
     )
     assert result.exit_code == 1
     assert "pip install pygame-ce" in result.output
+
+
+def test_init_writes_a_valid_starter_config(tmp_path: Path) -> None:
+    target = tmp_path / "config.yaml"
+    result = CliRunner().invoke(main, ["init", "--config", str(target)])
+    assert result.exit_code == 0
+    listed = CliRunner().invoke(main, ["list", "--config", str(target), "--sounds-dir", str(tmp_path / "s")])
+    assert listed.exit_code == 0 and "cpu_percent" in listed.output
+
+
+def test_init_refuses_to_overwrite(tmp_path: Path) -> None:
+    target = write_config(tmp_path)
+    result = CliRunner().invoke(main, ["init", "--config", str(target)])
+    assert result.exit_code == 1 and "--force" in result.output
+    assert CliRunner().invoke(main, ["init", "--config", str(target), "--force"]).exit_code == 0
+
+
+def test_packaged_default_matches_repo_config() -> None:
+    repo = Path(__file__).resolve().parents[1] / "config.yaml"
+    packaged = Path(__file__).resolve().parents[1] / "src" / "sonify" / "default_config.yaml"
+    assert repo.read_text() == packaged.read_text()

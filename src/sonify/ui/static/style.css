@@ -1,9 +1,4 @@
 @font-face {
-  font-family: "Minecraftia";
-  src: local("Minecraftia"), url("/static/fonts/Minecraftia-Regular.ttf") format("truetype");
-  font-display: swap;
-}
-@font-face {
   font-family: "Silkscreen";
   src: local("Silkscreen"), local("Silkscreen Regular"),
        url("/static/fonts/Silkscreen-Regular.ttf") format("truetype");
@@ -23,7 +18,7 @@
   --dirt: #6b4a2b;
   --gold: #f2c14e;
   --redstone: #ff5a4f;
-  --pixel: "Minecraftia", "Silkscreen", ui-monospace, "SF Mono", Menlo, monospace;
+  --pixel: "Silkscreen", ui-monospace, "SF Mono", Menlo, monospace;
   --body: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --bevel-in: #0c0c0e #5c5c64 #5c5c64 #0c0c0e;
   --bevel-out: #6a6a72 #131315 #131315 #6a6a72;
