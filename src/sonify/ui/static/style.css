@@ -1,7 +1,7 @@
 @font-face {
   font-family: "Silkscreen";
   src: local("Silkscreen"), local("Silkscreen Regular"),
-       url("/static/fonts/Silkscreen-Regular.woff2") format("woff2");
+       url("/static/fonts/Silkscreen-Regular.ttf") format("truetype");
   font-display: swap;
 }
 
